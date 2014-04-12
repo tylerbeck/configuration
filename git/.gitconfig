@@ -1,0 +1,6 @@
+[user]
+	name = Tyler Beck
+	email = tyler@tylerbeck.com
+[core]
+	quotepath = false
+	whitespace = ignore
