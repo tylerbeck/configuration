@@ -2,8 +2,8 @@
 
 # external sources ------------------------------
 source bash/.bash/misc/colors.sh
-source assets/misc/shared.sh
-source assets/misc/helper-functions.sh
+source assets/sh/shared.sh
+source assets/sh/helper-functions.sh
 
 
 # variables -------------------------------------
