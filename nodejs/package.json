@@ -1,0 +1,13 @@
+{
+	"name": "node-global-modules",
+	"version": "0.0.1",
+	"dependencies": {
+		"bower": "latest",
+		"forever": "latest",
+		"generator-generator": "latest",
+		"grunt": "latest",
+		"grunt-cli": "latest",
+		"yo": "latest"
+	}
+
+}

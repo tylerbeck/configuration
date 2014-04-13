@@ -16,11 +16,16 @@
 
 	__log_header "NodeJS Configuration" ${L}
 
-	__run "cd nodejs && npm install -g grunt && cd ../" ${L}
+	#ensure grunt and grunt-cli are installed
+	#TODO: uncomment following line for real use
+	#__run "cd nodejs && npm install -g grunt grunt-cli && cd ../" ${L}
 
-		#now that grunt is installed things get a bit easier
-	__run "cd nodejs && npm install -g grunt && cd ../" ${L}
+	#install computer config dependencies
+	#TODO: uncomment following line for real use
+	#__run "npm install" ${L}
 
+	#now that grunt is installed things get a bit easier
+	__run "grunt configure-node --verbose" ${L}
 
 	__log_complete ${L}
 
