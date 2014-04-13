@@ -2,4 +2,5 @@ homebrew/dupes
 homebrew/versions
 homebrew/science
 homebrew/completions
+homebrew/homebrew-apache
 homebrew/homebrew-php
