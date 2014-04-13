@@ -2,15 +2,16 @@
 
 # external sources ------------------------------
 source bash/.bash/misc/colors.sh
-source misc/shared.sh
-source misc/helper-functions.sh
+source assets/misc/shared.sh
+source assets/misc/helper-functions.sh
+
 
 # variables -------------------------------------
 LOG_PATH="$BASE_LOG_PATH/homebrew"
 PACKAGE_LOG_PATH="$LOG_PATH/packages"
 
-#get installation options -----------------------
 
+#get installation options -----------------------
 if [ "$#" = 0 ]; then
 	INSTALL_BREW=1
 	BREW_DOCTOR=1
@@ -43,8 +44,10 @@ else
 	done
 fi
 
+
 #setup ------------------------------------------
 mkdir -p "$LOG_PATH";
+
 
 #install homebrew -------------------------------
 if [ ${INSTALL_BREW} = 1 ]; then
@@ -60,6 +63,7 @@ if [ ${INSTALL_BREW} = 1 ]; then
 
 fi
 
+
 #run brew doctor --------------------------------
 if [ ${BREW_DOCTOR} = 1 ]; then
 
@@ -70,6 +74,7 @@ if [ ${BREW_DOCTOR} = 1 ]; then
 	__log_complete ${L}
 
 fi
+
 
 #tap kegs ---------------------------------------
 if [ ${TAP_KEGS} = 1 ]; then
@@ -93,6 +98,7 @@ if [ ${TAP_KEGS} = 1 ]; then
 	__log_complete ${L}
 
 fi
+
 
 #install packages -------------------------------
 if [ ${INSTALL_PACKAGES} = 1 ]; then
