@@ -39,7 +39,7 @@ __log_header ( )
 __log_complete ( )
 {
 	__put "$C_LIGHTGREEN"
-	__log "[COMPLETE]" $2
+	__log "[COMPLETE]" $1
 	__put "$C_LIGHTYELLOW"
 	__log "Log saved to: $1"
 	__put "$C_DEFAULT"

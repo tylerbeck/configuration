@@ -7,7 +7,7 @@ source misc/helper-functions.sh
 
 # variables -------------------------------------
 LOG_PATH="$BASE_LOG_PATH/bash"
-F="$LOG_PATH/configuration.log"
+L="$LOG_PATH/configuration.log"
 
 #get installation options -----------------------
 
@@ -27,13 +27,16 @@ if [ -e ~/.bash_profile ]; then
 	mv ~/.bash_profile ~/.old_bash_profile;
 fi
 
+
 BASH_SRC_PATH="$PWD/bash/.bash/"
 BASH_PROFILE_SRC_PATH="$PWD/bash/.bash_profile"
-__log "Linking ~/.bash" ${L}
-ln -s "$BASH_SRC_PATH/" ~/.bash
 
-__log "Linking ~/.bash_profile" ${L}
-ln -s "$BASH_SRC_PATH/" ~/.bash_profile
+__log "Linking ~/.bash to $BASH_SRC_PATH" ${L}
+ln -s "$BASH_SRC_PATH" ~/.bash
 
-__log_footer ${L}
+__log "Linking ~/.bash_profile to $BASH_PROFILE_SRC_PATH" ${L}
+ln -s "$BASH_PROFILE_SRC_PATH" ~/bash_profile
+mv ~/bash_profile ~/.bash_profile #fix os x bug... shows up as a folder icon until moving it.
+
+__log_complete ${L}
 
