@@ -1,42 +1,44 @@
 #!/bin/bash
 
 # external sources ------------------------------
-source bash/.bash/misc/colors.sh
-source assets/sh/shared.sh
-source assets/sh/helper-functions.sh
+	source bash/.bash/misc/colors.sh
+	source assets/sh/shared.sh
+	source assets/sh/helper-functions.sh
 
 
 # variables -------------------------------------
-LOG_PATH="$BASE_LOG_PATH/bash"
-L="$LOG_PATH/configuration.log"
+	LOG_PATH="$BASE_LOG_PATH/bash"
+	L="$LOG_PATH/configuration.log"
 
 
 #setup ------------------------------------------
-mkdir -p "$LOG_PATH";
+	mkdir -p "$LOG_PATH";
 
-__log_header "Bash Profile Configuration" ${L}
+	__log_header "Bash Profile Configuration" ${L}
 
-#move existing files
-if [ -e ~/.bash ]; then
-	__log "Moving existing ~/.bash directory to ~/.old_bash" ${L}
-	mv ~/.bash ~/.old_bash;
-fi
+	#move existing files
+	if [ -e ~/.bash ]; then
+		__log "Moving existing ~/.bash directory to ~/.old_bash" ${L}
+		mv ~/.bash ~/.old_bash;
+	fi
 
-if [ -e ~/.bash_profile ]; then
-	__log "Moving existing ~/.bash_profile directory to ~/.old_bash_profile" ${L}
-	mv ~/.bash_profile ~/.old_bash_profile;
-fi
+	if [ -e ~/.bash_profile ]; then
+		__log "Moving existing ~/.bash_profile directory to ~/.old_bash_profile" ${L}
+		mv ~/.bash_profile ~/.old_bash_profile;
+	fi
 
+	#set sources
+	BASH_SRC_PATH="$PWD/bash/.bash/"
+	BASH_PROFILE_SRC_PATH="$PWD/bash/.bash_profile"
 
-BASH_SRC_PATH="$PWD/bash/.bash/"
-BASH_PROFILE_SRC_PATH="$PWD/bash/.bash_profile"
+	#link bash scripts
+	__log "Linking ~/.bash to $BASH_SRC_PATH" ${L}
+	ln -s "$BASH_SRC_PATH" ~/.bash
 
-__log "Linking ~/.bash to $BASH_SRC_PATH" ${L}
-ln -s "$BASH_SRC_PATH" ~/.bash
+	#link profile
+	__log "Linking ~/.bash_profile to $BASH_PROFILE_SRC_PATH" ${L}
+	ln -s "$BASH_PROFILE_SRC_PATH" ~/bash_profile
+	mv ~/bash_profile ~/.bash_profile #fix os x bug... shows up as a folder icon until moving it.
 
-__log "Linking ~/.bash_profile to $BASH_PROFILE_SRC_PATH" ${L}
-ln -s "$BASH_PROFILE_SRC_PATH" ~/bash_profile
-mv ~/bash_profile ~/.bash_profile #fix os x bug... shows up as a folder icon until moving it.
-
-__log_complete ${L}
+	__log_complete ${L}
 

@@ -26,19 +26,31 @@ __run ( ) {
 
 __log_header ( )
 {
-	__put "$C_LIGHTGREEN"
+	if [ "$#" -gt 2 ]; then
+		COLOR=${3}
+	else
+		COLOR=${C_LIGHTGREEN}
+	fi
+
+
+	__put "$COLOR"
 	__log "======================================================================" $2
 	__put "$1" $2
 	__put "$C_DARKGRAY"
 	__log " - $( date )" $2
-	__put "$C_LIGHTGREEN"
+	__put "$COLOR"
 	__log "======================================================================" $2
 	__put "$C_DEFAULT"
 }
 
 __log_complete ( )
 {
-	__put "$C_LIGHTGREEN"
+	if [ "$#" -gt 1 ]; then
+		COLOR=${2}
+	else
+		COLOR=${C_LIGHTGREEN}
+	fi
+	__put "$COLOR"
 	__log "[COMPLETE]" $1
 	__put "$C_LIGHTYELLOW"
 	__log "Log saved to: $1"
