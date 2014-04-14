@@ -14,11 +14,10 @@
 				"devDependencies"
 			]
 		},
- 		"config-general": {
-			"path": "grunt/config/general.json",
+		"config-general": {
+			"path": "assets/grunt/config/general.json",
 			"properties": "/",
 			"indent": "\t"
 		}
 	}
-
 }

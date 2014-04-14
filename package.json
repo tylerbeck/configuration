@@ -2,16 +2,16 @@
   "name": "configuration",
   "version": "0.0.1",
   "devDependencies": {
+    "bower": "latest",
     "grunt": "latest",
+    "grunt-cli": "latest",
     "grunt-contrib-clean": "latest",
-	  "bower": "latest",
     "grunt-contrib-copy": "latest",
     "grunt-contrib-symlink": "latest",
-	  "q": "~1.0.1",
+    "grunt-exec": "latest",
     "grunt-mkdir": "latest",
-	  "grunt-cli": "latest",
     "grunt-start": "git://github.com/tylerbeck/grunt-start",
-	  "grunt-exec": "latest",
-    "lodash": "~2.4.1"
+    "lodash": "~2.4.1",
+    "q": "~1.0.1"
   }
 }
