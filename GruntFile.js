@@ -38,9 +38,5 @@ module.exports = new gs.Loader(
 				'install-global-modules'
 			]);
 
-			grunt.registerTask( 'tidy-up', [
-				'json-sort'
-			]);
-
 		}
 );
