@@ -1,0 +1,24 @@
+{
+	"json-sort": {
+		"package": {
+			"path": "package.json",
+			"properties": [
+				"dependencies",
+				"devDependencies"
+			]
+		},
+		"global": {
+			"path": "nodejs/package.json",
+			"properties": [
+				"dependencies",
+				"devDependencies"
+			]
+		},
+ 		"config-general": {
+			"path": "grunt/config/general.json",
+			"properties": "/",
+			"indent": "\t"
+		}
+	}
+
+}

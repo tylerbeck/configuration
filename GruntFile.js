@@ -38,17 +38,9 @@ module.exports = new gs.Loader(
 				'install-global-modules'
 			]);
 
-			grunt.registerTask( 'tidy-up', function(){
-				var done = this.async();
-				grunt.log.writeln("Tiding Up...");
-				setTimeout( function(){
-					grunt.log.writeln("...Still Cleaning...");
-				}, 500 );
-				setTimeout( function(){
-					grunt.log.writeln("...All Done!");
-					done();
-				}, 1000 );
-			});
+			grunt.registerTask( 'tidy-up', [
+				'json-sort'
+			]);
 
 		}
 );
