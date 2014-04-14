@@ -3,15 +3,15 @@
   "version": "0.0.1",
   "devDependencies": {
     "bower": "latest",
-    "grunt": "latest",
-    "grunt-cli": "latest",
+	  "lodash": "~2.4.1",
     "grunt-contrib-clean": "latest",
+	  "q": "~1.0.1",
     "grunt-contrib-copy": "latest",
+	  "grunt": "latest",
     "grunt-contrib-symlink": "latest",
     "grunt-exec": "latest",
+	  "grunt-cli": "latest",
     "grunt-mkdir": "latest",
-    "grunt-start": "git://github.com/tylerbeck/grunt-start",
-    "lodash": "~2.4.1",
-    "q": "~1.0.1"
+	  "grunt-start": "git://github.com/tylerbeck/grunt-start"
   }
 }
