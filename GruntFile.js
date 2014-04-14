@@ -43,7 +43,6 @@ module.exports = new gs.Loader(
 				grunt.log.writeln("Tiding Up...");
 				setTimeout( function(){
 					grunt.log.writeln("...Still Cleaning...");
-					done();
 				}, 500 );
 				setTimeout( function(){
 					grunt.log.writeln("...All Done!");
