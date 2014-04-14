@@ -26,17 +26,6 @@ module.exports = new gs.Loader(
 		//array of or single directory path in which grunt configuration objects have been defined
 		configDirs,
 
-		//grunt file scripts
-		function( grunt ){
-
-			//default task definition
-			grunt.registerTask( 'default', function(){
-				grunt.log.writeln('Computer Configuration Script - Default Task');
-			});
-
-			grunt.registerTask( 'configure-node', [
-				'install-global-modules'
-			]);
-
-		}
+		//grunt main - define tasks here if you want, but isn't nicer keeping everything in folders?
+		function( grunt ){ }
 );
