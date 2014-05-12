@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # external sources ------------------------------
-	source bash/.bash/misc/colors.sh
+	source conf.default/bash/misc/colors.sh
 	source assets/sh/shared.sh
 	source assets/sh/helper-functions.sh
 

@@ -10,7 +10,7 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		var pkg = grunt.file.readJSON( 'nodejs/package.json' );
+		var pkg = grunt.file.readJSON( 'conf/package_global.json' );
 
 		var loaders = [];
 		if ( pkg && pkg.dependencies ){

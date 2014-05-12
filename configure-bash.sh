@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # external sources ------------------------------
-	source bash/.bash/misc/colors.sh
+	source conf.default/bash/misc/colors.sh
 	source assets/sh/shared.sh
 	source assets/sh/helper-functions.sh
 
@@ -18,18 +18,18 @@
 
 	#move existing files
 	if [ -e ~/.bash ]; then
-		__log "Moving existing ~/.bash directory to ~/.old_bash" ${L}
-		mv ~/.bash ~/.old_bash;
+		__log "Moving existing ~/.bash directory to ~/.bash.orig" ${L}
+		mv ~/.bash ~/.bash.orig;
 	fi
 
 	if [ -e ~/.bash_profile ]; then
-		__log "Moving existing ~/.bash_profile directory to ~/.old_bash_profile" ${L}
-		mv ~/.bash_profile ~/.old_bash_profile;
+		__log "Moving existing ~/.bash_profile directory to ~/.bash_profile.orig" ${L}
+		mv ~/.bash_profile ~/.bash_profile.orig;
 	fi
 
 	#set sources
-	BASH_SRC_PATH="$PWD/bash/.bash/"
-	BASH_PROFILE_SRC_PATH="$PWD/bash/.bash_profile"
+	BASH_SRC_PATH="$PWD/conf/bash/"
+	BASH_PROFILE_SRC_PATH="$PWD/conf/.bash_profile"
 
 	#link bash scripts
 	__log "Linking ~/.bash to $BASH_SRC_PATH" ${L}

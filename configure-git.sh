@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # external sources ------------------------------
-	source bash/.bash/misc/colors.sh
+	source conf.default/bash/misc/colors.sh
 	source assets/sh/shared.sh
 	source assets/sh/helper-functions.sh
 
@@ -14,16 +14,16 @@
 #setup ------------------------------------------
 	mkdir -p "$LOG_PATH";
 
-	__log_header "Bash Profile Configuration" ${L}
+	__log_header "GIT Configuration" ${L}
 
 	#move existing files
 	if [ -e ~/.gitconfig ]; then
-		__log "Moving existing ~/.gitconfig directory to ~/.old_gitconfig" ${L}
-		mv ~/.gitconfig ~/.old_gitconfig;
+		__log "Moving existing ~/.gitconfig directory to ~/.gitconfig.orig" ${L}
+		mv ~/.gitconfig ~/.gitconfig.orig;
 	fi
 
 	#set file path
-	GITCONFIG_SRC_PATH="$PWD/git/.gitconfig/"
+	GITCONFIG_SRC_PATH="$PWD/conf/.gitconfig/"
 
 	#link file
 	__log "Linking ~/.gitconfig to $GITCONFIG_SRC_PATH" ${L}

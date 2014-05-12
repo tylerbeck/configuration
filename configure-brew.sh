@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # external sources ------------------------------
-	source bash/.bash/misc/colors.sh
+	source conf.default/bash/misc/colors.sh
 	source assets/sh/shared.sh
 	source assets/sh/helper-functions.sh
 
@@ -84,7 +84,7 @@
 		__log_header "Tapping Kegs" ${L}
 
 		IFS=$'\n'
-		for KEG in `cat brew/taps`
+		for KEG in `cat conf/brew/taps`
 		do
 
 			KEG=$( __trim "$KEG" )
@@ -106,7 +106,7 @@
 		mkdir -p "$PACKAGE_LOG_PATH";
 
 		IFS=$'\n'
-		for PKG in `cat brew/packages`
+		for PKG in `cat conf/brew/packages`
 		do
 
 			PKG=$( __trim "$PKG" )
