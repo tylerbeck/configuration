@@ -18,7 +18,7 @@
 
 	#ensure grunt and grunt-cli are installed
 	#TODO: uncomment following line for real use
-	#__run "cd nodejs && npm install -g grunt grunt-cli && cd ../" ${L}
+	__run "npm install -g grunt grunt-cli" ${L}
 
 	#install computer config dependencies
 	#TODO: uncomment following line for real use
