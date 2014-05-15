@@ -67,7 +67,6 @@
 		#copy default configuration
 		cp -R conf.default/ conf/
 
-
 	fi
 
 	if [ ${INSTALL_HOSTS} = 1 ]; then
