@@ -11,7 +11,9 @@
     "grunt-exec": "latest",
     "grunt-mkdir": "latest",
     "grunt-start": "git://github.com/tylerbeck/grunt-start",
+    "inquirer": "^0.4.1",
     "lodash": "~2.4.1",
-    "q": "~1.0.1"
+    "q": "~1.0.1",
+    "sudo": "^1.0.3"
   }
 }

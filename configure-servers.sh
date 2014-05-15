@@ -12,18 +12,23 @@
 
 #get installation options -----------------------
 	if [ "$#" = 0 ]; then
-		INSTALL_GENERAL=1
+		INSTALL_CONF=1
+		INSTALL_HOSTS=1
 		INSTALL_NGINX=1
 		INSTALL_APACHE=1
 	else
-		INSTALL_GENERAL=0
+	    INSTALL_CONF=0
+		INSTALL_HOSTS=0
 		INSTALL_NGINX=0
 		INSTALL_APACHE=0
 
-		while getopts ":gna" opt; do
+		while getopts ":chna" opt; do
 	        case $opt in
-	            g)
-	                INSTALL_GENERAL=1
+	            c)
+	                INSTALL_CONF=1
+	                ;;
+	            h)
+	                INSTALL_HOSTS=1
 	                ;;
 	            n)
 	                INSTALL_NGINX=1
@@ -42,11 +47,27 @@
 #setup ------------------------------------------
 	mkdir -p "$LOG_PATH";
 
-	if [ ${INSTALL_GENERAL} = 1 ]; then
+	if [ ${INSTALL_CONF} = 1 ]; then
 
-		L="$LOG_PATH/configuration.log"
+		L="$LOG_PATH/conf.log"
 
-		__log_header "General Server Configuration" ${L}
+		__log_header "Local Configuration" ${L}
+
+		if [ -e conf ]; then
+			__log "Moving existing conf directory to conf.orig" ${L}
+			mv conf conf.orig;
+		fi
+
+		cp -R conf.default/ conf/
+
+
+	fi
+
+	if [ ${INSTALL_HOSTS} = 1 ]; then
+
+		L="$LOG_PATH/hosts.log"
+
+		__log_header "Hosts Configuration" ${L}
 
 		if [ -e /etc/hosts ]; then
 			__log "Moving existing /etc/hosts directory to /etc/hosts.orig" ${L}
@@ -57,8 +78,10 @@
 		HOSTS_SRC_PATH="$PWD/conf/hosts"
 
 		#link configuration directory
-		__log "Linking /etc/hosts to $HOSTS_SRC_PATH" ${L}
-		sudo ln -s "$HOSTS_SRC_PATH" /etc/hosts
+		#symlinks will not work in the current version of os x so we need to copy the file,
+		#the grunt management tasks will update conf/hosts, then copy it to /etc/hosts
+		__log "Copying $HOSTS_SRC_PATH to /etc/hosts" ${L}
+		sudo cp "$HOSTS_SRC_PATH"
 
 	fi
 
@@ -97,7 +120,7 @@
 		#move existing configuration directory
 		if [ -e /etc/apache2 ]; then
 			__log "Moving existing /etc/apache2 directory to /etc/apache2.orig" ${L}
-			mv /etc/apache2 /etc/apache2.orig;
+			sudo mv /etc/apache2 /etc/apache2.orig;
 		fi
 
 		#set sources
@@ -105,7 +128,7 @@
 
 		#link configuration directory
 		__log "Linking /etc/apache2 to $CONF_SRC_PATH" ${L}
-		ln -s "$CONF_SRC_PATH" /etc/apache2
+		sudo ln -s "$CONF_SRC_PATH" /etc/apache2
 
 		#TODO: autostart on boot
 

@@ -7,8 +7,15 @@
 				"devDependencies"
 			]
 		},
-		"global": {
-			"path": "nodejs/package.json",
+		"conf": {
+			"path": "conf/package_global.json",
+			"properties": [
+				"dependencies",
+				"devDependencies"
+			]
+		},
+		"default-conf": {
+			"path": "conf.default/package_global.json",
 			"properties": [
 				"dependencies",
 				"devDependencies"
