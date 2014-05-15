@@ -23,7 +23,7 @@
 	fi
 
 	#set file path
-	GITCONFIG_SRC_PATH="$PWD/conf/.gitconfig/"
+	GITCONFIG_SRC_PATH="$PWD/conf/.gitconfig"
 
 	#link file
 	__log "Linking ~/.gitconfig to $GITCONFIG_SRC_PATH" ${L}
