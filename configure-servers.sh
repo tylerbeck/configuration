@@ -58,6 +58,13 @@
 			mv conf conf.orig;
 		fi
 
+		#create vhost folders
+		mkdir conf/nginx/sites-available
+		mkdir conf/nginx/sites-enabled
+		mkdir conf/apache2/sites-available
+		mkdir conf/apache2/sites-enabled
+
+		#copy default configuration
 		cp -R conf.default/ conf/
 
 
@@ -103,6 +110,7 @@
 		#link configuration directory
 		__log "Linking /usr/local/etc/nginx to $CONF_SRC_PATH" ${L}
 		ln -s "$CONF_SRC_PATH" /usr/local/etc/nginx
+
 
 		#TODO: autostart on boot
 
