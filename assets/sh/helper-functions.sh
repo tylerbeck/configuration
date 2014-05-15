@@ -18,9 +18,9 @@ __put ( )
 
 __run ( ) {
 	if [ "$#" -gt 1 ]; then
-		$1 2>&1 | tee -a $2
+		eval $1 2>&1 | tee -a $2
 	elif [ "$#" -gt 0 ]; then
-		$1
+		eval $1
 	fi
 }
 

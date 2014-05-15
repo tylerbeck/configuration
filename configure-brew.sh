@@ -120,7 +120,7 @@
 				__log "$INSTALL_CMD" ${L}
 
 				#TODO: uncomment next line for real use
-				__run "brew install $PKG" ${L}
+				__run "$INSTALL_CMD" ${L}
 
 				__log_complete ${L}
 			fi
