@@ -56,8 +56,7 @@
 
 		__log_header "Homebrew Installation" ${L}
 
-		#TODO: uncomment next line for real use
-		#__run "ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"" ${L}
+		__run "ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"" ${L}
 
 		__log_complete ${L}
 
@@ -115,14 +114,13 @@
 				L="$PACKAGE_LOG_PATH/$PKG.log"
 
 				__log_header "Installing Package" ${L}
+
 				#make sure the package is installed with options from file
 				INSTALL_CMD="brew install $PKG";
+				__log "$INSTALL_CMD" ${L}
 
 				#TODO: uncomment next line for real use
-				#__run "$INSTALL_CMD" ${L}
-
-				#TODO: comment next line for real use
-				__log "$INSTALL_CMD" ${L}
+				__run "brew install $PKG" ${L}
 
 				__log_complete ${L}
 			fi

@@ -71,7 +71,7 @@ module.exports = function( grunt ){
 			message: "proxy php requests",
 			type: 'confirm',
 			when: function( answers ){
-				return true; //matchFn( 'serverType', 'nginx', answers );
+				return matchFn( 'serverType', 'nginx', answers, false );
 			},
 			default: false
 		},
@@ -102,10 +102,20 @@ module.exports = function( grunt ){
 		},
 		rootPath: {
 			name: "rootPath",
-			message: "root path",
+			message: "webroot path",
 			type: 'input',
 			//TODO: validate root directory path
-			validate: validatePattern( true, /.*/, 'enter a valid path')
+			validate: validatePattern( true, /.*/, 'enter a valid path'),
+		},
+		projectRootPath: {
+			name: "rootPath",
+			message: "webroot path (relative to project)",
+			type: 'input',
+			//TODO: validate root directory path
+			validate: validatePattern( true, /.*/, 'enter a valid path'),
+			filter: function( value ){
+				return path.join( options['projectPath'], value );
+			}
 		},
 		apacheOptions: {
 			name: "apacheOptions",
@@ -500,6 +510,7 @@ module.exports = function( grunt ){
 	function addVhost(){
 
 		grunt.log.writeln( "adding vhost: "+options.domain );
+		grunt.log.writeln( JSON.stringify(options, undefined, "  ") );
 		var domain = options.domain.trim();
 		if ( options.serverType == "apache" || options.proxyPHP ){
 			var atpl = grunt.file.read("assets/apache2/vhost.conf");
@@ -609,13 +620,13 @@ module.exports = function( grunt ){
 					}
 					else{
 						grunt.log.writeln("");
-						d.reject( 'start process exited with code ' + code )
+						d.reject( 'start process exited with code ' + startCode )
 					}
 				});
 			}
 			else{
 				grunt.log.writeln("");
-				d.reject( 'stop process exited with code ' + code )
+				d.reject( 'stop process exited with code ' + stopCode )
 			}
 		});
 
@@ -758,7 +769,7 @@ module.exports = function( grunt ){
 
 		//check to see if project's server-type is defined
 		if ( options.rootPath == undefined ){
-			prompt( "rootPath" )().
+			prompt( "projectRootPath" )().
 					then( function( result ){
 						_.merge( options, result );
 						d.resolve( options );
@@ -780,9 +791,9 @@ module.exports = function( grunt ){
 
 		//check to see if project's server-type is defined
 		if ( options.serverType != "none" ){
-			var qlist = "domain ipv4 ipv6 proxyPHP proxyPort denyDotAccess apacheOptions "+
+			var qlist = "domain ipv4 ipv6 staticPaths denyDotAccess proxyPHP proxyPort apacheOptions "+
 						"apacheOrder apacheAllow apacheDeny apacheOverride";
-			(prompt( qlist ))().
+			( prompt( qlist ) )().
 					then( function( result ){
 						_.merge( options, result );
 						d.resolve( options );
@@ -915,7 +926,7 @@ module.exports = function( grunt ){
 		restartNginX().
 				then( restartApache ).
 				then( finished( done ) ).
-				catch( problem );
+				catch( problem, "an error occurred restarting server" );
 
 	});
 
@@ -933,6 +944,7 @@ module.exports = function( grunt ){
 				then( prompt( qlist ) ).
 				then( populateProject ).
 				then( serverTypePrompt ).
+				then( serverWebrootPrompt ).
 				then( serverOptionsPrompt ).
 				then( updateHostsFileEntry ).
 				then( addVhost ).

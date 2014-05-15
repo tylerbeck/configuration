@@ -76,19 +76,17 @@
 			mkdir ~/Projects
 		fi
 
-		if [ -ne ~/Sites ]; then
-			__log "Creating Sites directory at ~/Sites" ${L}
-			mkdir -p ~/Sites
-		fi
-
-		if [ -ne ~/Sites/localhost ]; then
-			__log "Creating localhost directory at ~/Sites/localhost" ${L}
-			mkdir -p ~/Sites/localhost
-
-			__log "Adding default files to localhost" ${L}
-			cp assets/files/index.html ~/Sites/localhost/index.html
-			cp assets/files/info.php ~/Sites/localhost/info.php
-		fi
+		#if [ -ne ~/Sites ]; then
+		#	__log "Creating Sites directory at ~/Sites" ${L}
+		#	mkdir -p ~/Sites
+		#fi
+		#if [ -ne ~/Sites/localhost ]; then
+		#	__log "Creating localhost directory at ~/Sites/localhost" ${L}
+		#	mkdir -p ~/Sites/localhost
+		#	__log "Adding default files to localhost" ${L}
+		#	cp assets/files/index.html ~/Sites/localhost/index.html
+		#	cp assets/files/info.php ~/Sites/localhost/info.php
+		#fi
 
 	fi
 
