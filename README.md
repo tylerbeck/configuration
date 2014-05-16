@@ -1,65 +1,63 @@
-##Computer Configuration Script
+##Full Installation
 1. Install XCode from AppStore
 
 2. Install XCode Command Line Tools
 ```
 xcode-select --install
 ```
-3. 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-----
-3. Add Symlink to Prevent Toolchain bug
+3. Create a `Projects` directory & clone configuration repository
 ```
-sw_vers -productVersion | grep -E '^10\.[89]' > /dev/null && bash -c "[ -d /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain ] && sudo -u $(ls -ld /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain | awk '{print $3}') bash -c 'ln -vs XcodeDefault.xctoolchain /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain' || sudo bash -c 'mkdir -vp /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain/usr && ln -s /usr/bin /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain/usr/bin'"
-```
-4. Install HomeBrew
-```
-(ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)) \
-	2>&1 | tee ~/Desktop/Installation\ Receipts/homebrew/install.log
-```
-5. Tap Additional Repositories
-```
-brew tap \
-		homebrew/dupes \
-		homebrew/versions \
-		homebrew/science \
-	 	homebrew/completions \
-	 	homebrew/homebrew-php \
-2>&1 | tee ~/Desktop/Installation\ Receipts/homebrew/taps.log
+cd ~/ && mkdir Projects
+git clone https://github.com/tylerbeck/configuration.git
 ```
 
-6. Install Brew Packages
-```
-brew install \
+4. If you already have a compatible confiugration directory, clone or copy it to `~/Projects/configuration/conf/` otherwise if you want to alter the default brew and node installs do the following:
+	
+	1. Run folder configuration to copy default configuration
+	
+		```
+		sh configure.sh -f
+		```
+	2. Open `conf/brew/taps` and add/remove brew taps; one per line.
+	3. Open `conf/brew/packages` and add/remove brew packages to be installed.
+	4. Open `conf/applications/download_links` and add/remove links to download pages for applications to be manually installed.
+	5. Open `conf/node/package_global.json` and add/remove global node modules to be installed.
+	
 
+5. Run installation script with all options (logs will be saved in ~/Desktop/computer-config-logs):
+	* -x: link xcode toolchain 
+	* -f: configure folders (Projects, conf); this will not overwrite existing directories
+	* -b: configure bash profile
+	* -h: configure homebrew (install, run doctor, tap kegs, install packages)
+	* -g: configure git profile
+	* -n: configure nodejs
+	* -s: configure application servers (nginx, apache)
+	* -a: install applications
+	
+```
+sh configure.sh -xfbhgnsa
 ```
 
-100. Open Links in Safari to Download Installers
-```
-open -a Safari http://www.alfredapp.com/#download
-open -a Safari http://www.barebones.com/support/bbedit/updates.html
-open -a Safari http://pngmini.com
-open -a Safari http://imageoptim.com
-open -a Safari http://www.jetbrains.com/idea/download/
-open -a Safari http://www.knocktounlock.com/download
-open -a Safari http://www.omnigroup.com/omnigraffle#download
-open -a Safari http://cocoatech.com/pathfinder/download
-open -a Safari http://www.sequelpro.com/download
-open -a Safari https://github.com/mapbox/tilemill/downloads
-```
+
+
+
+##Component Installation
+
+TODO
+
+##Grunt Tasks
+
+TODO
+
+
+
+
+
+
+
+
+
+
+
+
+

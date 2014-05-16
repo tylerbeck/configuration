@@ -17,9 +17,10 @@
 	CONFIGURE_GIT=0
 	CONFIGURE_NODEJS=0
 	CONFIGURE_SERVERS=0
+	CONFIGURE_APPS=0
 	XXXXXX=0
 
-	while getopts ":nx" opt; do
+	while getopts ":xfbhgnsa" opt; do
         case $opt in
             x)
                 LINK_TOOLCHAIN=1
@@ -42,6 +43,9 @@
             s)
 		        CONFIGURE_SERVERS=1
 		        ;;
+            a)
+		        CONFIGURE_APPS=1
+		        ;;
             \?)
                 echo "Invalid option: -$OPTARG"
                 ;;
@@ -57,6 +61,7 @@
 
 #ensure xcode toolchain links -------------------
 	if [ ${LINK_TOOLCHAIN} = 1 ]; then
+		#__log "LINK_TOOLCHAIN" ${L}
 		__log "Re-Linking XCode Toolchain" ${L}
 		#from https://github.com/Homebrew/homebrew-apache
 		sw_vers -productVersion | grep -E '^10\.[89]' > /dev/null && bash -c "[ -d /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain ] && sudo -u $(ls -ld /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain | awk '{print $3}') bash -c 'ln -vs XcodeDefault.xctoolchain /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain' || sudo bash -c 'mkdir -vp /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain/usr && ln -s /usr/bin /Applications/Xcode.app/Contents/Developer/Toolchains/OSX$(sw_vers -productVersion | cut -c-4).xctoolchain/usr/bin'"
@@ -65,22 +70,42 @@
 
 #create projects and sites folders --------------
 	if [ ${CONFIGURE_FOLDERS} = 1 ]; then
+		#__log "CONFIGURE_FOLDERS" ${L}
 
-		if [ -ne conf ]; then
+		if [ ! -e conf ]; then
 			__log "conf directory not found, copying conf.default to conf" ${L}
 			cp conf.default conf
 		fi
 
-		if [ -ne ~/Projects ]; then
+		if [ ! -e ~/Projects ]; then
 			__log "Creating Projects directory at ~/Projects" ${L}
 			mkdir ~/Projects
 		fi
 
-		#if [ -ne ~/Sites ]; then
+
+		if [ ! -e conf/nginx/sites-available ]; then
+			__log "creating conf/nginx/sites-available" ${L}
+			mkdir conf/nginx/sites-available
+		fi
+		if [ ! -e conf/nginx/sites-enabled ]; then
+			__log "creating conf/nginx/sites-enabled" ${L}
+			mkdir conf/nginx/sites-enabled
+		fi
+		if [ ! -e conf/apache2/sites-available ]; then
+			__log "creating conf/apache2/sites-available" ${L}
+			mkdir conf/apache2/sites-available
+		fi
+		if [ ! -e conf/apache2/sites-enabled ]; then
+			__log "creating conf/apache2/sites-enabled" ${L}
+			mkdir conf/apache2/sites-enabled
+		fi
+
+
+		#if [ ! -e ~/Sites ]; then
 		#	__log "Creating Sites directory at ~/Sites" ${L}
 		#	mkdir -p ~/Sites
 		#fi
-		#if [ -ne ~/Sites/localhost ]; then
+		#if [ ! -e ~/Sites/localhost ]; then
 		#	__log "Creating localhost directory at ~/Sites/localhost" ${L}
 		#	mkdir -p ~/Sites/localhost
 		#	__log "Adding default files to localhost" ${L}
@@ -93,6 +118,7 @@
 
 #configure brew ---------------------------------
 	if [ ${CONFIGURE_HOMEBREW} = 1 ]; then
+		#__log "CONFIGURE_HOMEBREW" ${L}
 		#install brew
 		#run brew doctor
 		#tap kegs
@@ -100,8 +126,9 @@
 		sh configure-brew.sh
 	fi
 
-#configure brew ---------------------------------
+#configure git ----------------------------------
 	if [ ${CONFIGURE_GIT} = 1 ]; then
+		#__log "CONFIGURE_GIT" ${L}
 		#relink .gitconfig
 		sh configure-git.sh
 	fi
@@ -109,14 +136,24 @@
 
 #configure node ---------------------------------
 	if [ ${CONFIGURE_NODEJS} = 1 ]; then
+		#__log "CONFIGURE_NODEJS" ${L}
 		#install global packages
 		sh configure-node.sh
 	fi
 
-#configure node ---------------------------------
+#configure servers ------------------------------
 	if [ ${CONFIGURE_SERVERS} = 1 ]; then
+		#__log "CONFIGURE_SERVERS" ${L}
 		#link server configuration
 		sh configure-servers.sh
+	fi
+
+
+#configure applications -------------------------
+	if [ ${CONFIGURE_APPS} = 1 ]; then
+		#__log "CONFIGURE_SERVERS" ${L}
+		#link server configuration
+		sh configure-applications.sh
 	fi
 
 

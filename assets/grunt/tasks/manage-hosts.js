@@ -470,18 +470,23 @@ module.exports = function( grunt ){
 	 * @returns {*}
 	 */
 	function updateHostsFileEntry(){
-		var domain = options.domain.trim();
-		var ip4 = options.ipv4;
-		var ip6 = options.ipv6;
-		grunt.log.writeln( "updating hosts file entry: "+domain );
 
 		var parts = parseHostsFile();
 
-		if (parts.managed[domain] == undefined){
-			parts.managed[domain] = {};
+		var domain = options.domain.trim();
+
+		if (domain != 'localhost'){ //localhost should not be modified
+			var ip4 = options.ipv4;
+			var ip6 = options.ipv6;
+			grunt.log.writeln( "updating hosts file entry: "+domain );
+
+
+			if (parts.managed[domain] == undefined){
+				parts.managed[domain] = {};
+			}
+			parts.managed[ domain ].ip4 = ip4;
+			parts.managed[ domain ].ip6 = ip6;
 		}
-		parts.managed[ domain ].ip4 = ip4;
-		parts.managed[ domain ].ip6 = ip6;
 
 		return updateHostsFile( parts, false );
 
@@ -492,13 +497,16 @@ module.exports = function( grunt ){
 	 * @returns {*}
 	 */
 	function removeHostsFileEntry(){
-		var domain = options.domain.trim();
-		grunt.log.writeln( "updating hosts file entry: "+domain );
 
 		var parts = parseHostsFile();
 
-		parts.managed[ domain ] = undefined;
-		delete parts.managed[ domain ];
+		var domain = options.domain.trim();
+
+		if (domain != 'localhost') { //localhost should not be modified
+			grunt.log.writeln( "updating hosts file entry: " + domain );
+			parts.managed[ domain ] = undefined;
+			delete parts.managed[ domain ];
+		}
 
 		return updateHostsFile( parts, false );
 	}
