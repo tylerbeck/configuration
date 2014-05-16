@@ -22,6 +22,8 @@ git clone https://github.com/tylerbeck/configuration.git
 	3. Open `conf/brew/packages` and add/remove brew packages to be installed.
 	4. Open `conf/applications/download_links` and add/remove links to download pages for applications to be manually installed.
 	5. Open `conf/node/package_global.json` and add/remove global node modules to be installed.
+
+5. Optionally make changes to any configuration files in `conf` (this can also be done at a later time; all original files and directories are coppied to [name].orig)
 	
 
 5. Run installation script with all options (logs will be saved in ~/Desktop/computer-config-logs):
