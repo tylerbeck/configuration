@@ -83,24 +83,6 @@
 		fi
 
 
-		if [ ! -e conf/nginx/sites-available ]; then
-			__log "creating conf/nginx/sites-available" ${L}
-			mkdir conf/nginx/sites-available
-		fi
-		if [ ! -e conf/nginx/sites-enabled ]; then
-			__log "creating conf/nginx/sites-enabled" ${L}
-			mkdir conf/nginx/sites-enabled
-		fi
-		if [ ! -e conf/apache2/sites-available ]; then
-			__log "creating conf/apache2/sites-available" ${L}
-			mkdir conf/apache2/sites-available
-		fi
-		if [ ! -e conf/apache2/sites-enabled ]; then
-			__log "creating conf/apache2/sites-enabled" ${L}
-			mkdir conf/apache2/sites-enabled
-		fi
-
-
 		#if [ ! -e ~/Sites ]; then
 		#	__log "Creating Sites directory at ~/Sites" ${L}
 		#	mkdir -p ~/Sites
@@ -113,6 +95,11 @@
 		#	cp assets/files/info.php ~/Sites/localhost/info.php
 		#fi
 
+	fi
+#configure bash ---------------------------------
+	if [ ${CONFIGURE_BASH} = 1 ]; then
+		#__log "CONFIGURE_BASH" ${L}
+		sh configure-bash.sh
 	fi
 
 

@@ -31,7 +31,7 @@ git clone https://github.com/tylerbeck/configuration.git
 	* -f: configure folders (Projects, conf); this will not overwrite existing directories
 	* -b: configure bash profile
 	* -h: configure homebrew (install, run doctor, tap kegs, install packages)
-	* -g: configure git profile
+	* -g: configure gitconfig
 	* -n: configure nodejs
 	* -s: configure application servers (nginx, apache)
 	* -a: install applications

@@ -53,19 +53,23 @@
 
 		__log_header "Local Configuration" ${L}
 
-		if [ -e conf ]; then
-			__log "Moving existing conf directory to conf.orig" ${L}
-			mv conf conf.orig;
-		fi
-
 		#create vhost folders
-		mkdir conf/nginx/sites-available
-		mkdir conf/nginx/sites-enabled
-		mkdir conf/apache2/sites-available
-		mkdir conf/apache2/sites-enabled
-
-		#copy default configuration
-		cp -R conf.default/ conf/
+		if [ ! -e conf/nginx/sites-available ]; then
+			__log "creating conf/nginx/sites-available" ${L}
+			mkdir -p conf/nginx/sites-available
+		fi
+		if [ ! -e conf/nginx/sites-enabled ]; then
+			__log "creating conf/nginx/sites-enabled" ${L}
+			mkdir -p conf/nginx/sites-enabled
+		fi
+		if [ ! -e conf/apache2/sites-available ]; then
+			__log "creating conf/apache2/sites-available" ${L}
+			mkdir -p conf/apache2/sites-available
+		fi
+		if [ ! -e conf/apache2/sites-enabled ]; then
+			__log "creating conf/apache2/sites-enabled" ${L}
+			mkdir -p conf/apache2/sites-enabled
+		fi
 
 	fi
 
@@ -87,7 +91,7 @@
 		#symlinks will not work in the current version of os x so we need to copy the file,
 		#the grunt management tasks will update conf/hosts, then copy it to /etc/hosts
 		__log "Copying $HOSTS_SRC_PATH to /etc/hosts" ${L}
-		sudo cp "$HOSTS_SRC_PATH"
+		sudo cp "$HOSTS_SRC_PATH" /etc/hosts
 
 	fi
 
