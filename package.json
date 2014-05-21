@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "devDependencies": {
     "bower": "latest",
+    "fs-extra": "^0.8.1",
     "grunt": "latest",
     "grunt-cli": "latest",
     "grunt-contrib-clean": "latest",
@@ -14,6 +15,7 @@
     "inquirer": "^0.4.1",
     "lodash": "~2.4.1",
     "q": "~1.0.1",
-    "sudo": "^1.0.3"
+    "sudo": "^1.0.3",
+    "yeoman-generator": "^0.17.0"
   }
 }
