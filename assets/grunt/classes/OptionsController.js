@@ -118,7 +118,7 @@ module.exports = function OptionsController( grunt ){
 			message: "webroot path",
 			type: 'input',
 			//TODO: validate root directory path
-			validate: validatePattern( true, /.*/, 'enter a valid path')
+			validate: validatePattern( true, /.*/, 'enter a valid path'),
 		},
 		projectRootPath: {
 			name: "rootPath",
@@ -201,7 +201,11 @@ module.exports = function OptionsController( grunt ){
 				"apache",
 				"other",
 				"none"
-			]
+			],
+			when: function( answers ){
+				return matchFn( 'projectAddVhost', true, answers );
+			}
+
 		},
 		projectWebRoot: {
 			name: "webroot",
@@ -209,11 +213,11 @@ module.exports = function OptionsController( grunt ){
 			type: 'input',
 			validate: validatePattern( true, /.*/, 'enter a valid path'),
 			when: function( answers ){
-				projectPath = answers['projectPath'];
-				return matchFn( 'serverType', 'none', answers, true );
+				return matchFn( 'projectAddVhost', true, answers ) && matchFn( 'serverType', 'none', answers, true );
 			},
 			filter: function( value ){
-				return path.join( projectPath, value );
+				setOption( 'rootPath', path.join( options['projectPath'], value ) );
+				return value;
 			}
 		},
 		projectIsNew: {
@@ -279,7 +283,14 @@ module.exports = function OptionsController( grunt ){
 				return matchFn( 'projectIsNew', true, answers ) && matchFn( 'projectSourceType', "yo", answers );
 			},
 			first: loadYoGenerators
+		},
+		projectAddVhost: {
+			name: "projectAddVhost",
+			message: "would you like to setup a virtual host?",
+			type: 'confirm',
+			default: true
 		}
+
 	};
 
 
@@ -441,47 +452,27 @@ module.exports = function OptionsController( grunt ){
 	 * @returns {*}
 	 */
 	function loadYoGenerators(){
+
 		grunt.log.writeln('loading yo generators...');
+
 		var d = q.defer();
-		var matchName = /generator-([^@\r\n\s]+)/;
-		//TODO: switch to yo --help to get list of generators
-		var proc = exec('npm list -g | grep generator-',
-				function ( error, stdout, stderr ) {
-					var gmap = {};
-					if (error !== null) {
-						console.log('exec error: ' + error);
-						d.reject( error );
-					}
-					else{
-						var lines = stdout.split(/[\r\n]/g);
-						lines.forEach( function( line ){
-							line = line.trim();
-							if (line != ""){
-								var parts = line.match( matchName );
-								if (parts && parts.length > 0){
-									gmap[ parts[1] ] = true;
-								}
-							}
-						});
 
-						var generators = Object.keys( gmap );
-						if ( generators.length > 0 ){
-							questions[ 'projectScaffoldGenerator' ].choices = generators;
-							//console.log( generators.join("\n"));
-							d.resolve();
-						}
-						else{
-							d.reject('no generators are installed');
-						}
+		var env = require('yeoman-generator')();
+		env.lookup();
+		var generators = _.uniq( Object.keys( env.getGeneratorsMeta() ).map( function (el){
+			return el.split(':')[0];
+		} ) );
 
-					}
-				});
+		if ( generators.length > 0 ){
+			questions[ 'projectScaffoldGenerator' ].choices = generators;
+			d.resolve();
+		}
+		else{
+			d.reject('no generators are installed');
+		}
 
 		return d.promise;
 	}
-
-	//TODO: add a public getYoGenerators method that uses yo --help to get (and cache) list of generators
-	//TODO: update loadYoGenerators to use getYoGenerators
 
 
 	/*================================================

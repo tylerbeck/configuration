@@ -47,29 +47,37 @@ module.exports = function ApacheController( grunt, options ){
 
 		var d = q.defer();
 
-		var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths "+
+		var serverType = options.get('serverType');
+
+		if ( serverType == undefined || serverType == 'apache' ){
+
+			var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths "+
 					"rootPath apacheOptions apacheOrder apacheAllow apacheDeny apacheOverride";
 
-		( options.promptIfMissing( qlist ) )().
-				then( function(){
-					var domain = options.get('domain').trim();
-					var tpl = grunt.file.read( confTplPath );
-					var conf = _.template( tpl, options.getAll() ).replace(/[\n\r]+\s*[\n\r]+/g,"\n");
+			( options.promptIfMissing( qlist ) )().
+					then( function(){
+						var domain = options.get('domain').trim();
+						var tpl = grunt.file.read( confTplPath );
+						var conf = _.template( tpl, options.getAll() ).replace(/[\n\r]+\s*[\n\r]+/g,"\n");
 
-					//write file
-					grunt.log.writeln( "adding apache vhost: "+domain );
-					grunt.file.write( sitesAvblPath+domain, conf );
+						//write file
+						grunt.log.writeln( "adding apache vhost: "+domain );
+						grunt.file.write( sitesAvblPath+domain, conf );
 
-				} ).
-				then( d.resolve ).
-				catch( d.reject );
+					} ).
+					then( d.resolve ).
+					catch( d.reject );
+		}
+		else{
+			d.resolve();
+		}
 
 		return d.promise;
 
 	}
 
 	/**
-	 * adds vhost to sites-available
+	 * removes vhost from sites-available
 	 */
 	function removeVhost(){
 
@@ -109,17 +117,21 @@ module.exports = function ApacheController( grunt, options ){
 				then( function(){
 					var domain = options.get('domain').trim();
 
-					grunt.log.writeln( "enabling apache vhost: "+domain );
-
 					var confSrc  = sitesAvblPath+domain;
 					var confDest = sitesEnblPath+domain;
 
 					if ( grunt.file.exists( confSrc ) ){
-						fs.symlinkSync( confSrc, confDest );
+						if (grunt.file.exists( confDest )){
+							grunt.log.writeln( "apache vhost already enabled for: "+domain );
+						}
+						else{
+							grunt.log.writeln( "enabling apache vhost: "+domain );
+							fs.symlinkSync( confSrc, confDest );
+						}
 					}
-					else{
-						grunt.log.error('apache vhost: '+domain+' not found');
-					}
+					//else{
+					//	grunt.log.error('apache vhost: '+domain+' not found');
+					//}
 				} ).
 				then( d.resolve ).
 				catch( d.reject );
@@ -141,11 +153,10 @@ module.exports = function ApacheController( grunt, options ){
 				then( function(){
 					var domain = options.get('domain').trim();
 
-					grunt.log.writeln( "disabling apache vhost: "+domain );
-
 					var confDest = sitesEnblPath+domain;
 
 					if ( grunt.file.exists( confDest ) ){
+						grunt.log.writeln( "disabling apache vhost: "+domain );
 						grunt.file.delete( confDest );
 					}
 				} ).
@@ -163,12 +174,11 @@ module.exports = function ApacheController( grunt, options ){
 	function restart(){
 
 		var d = q.defer();
-		grunt.log.write("restarting apache...");
 		var proc = sudo( [ "apachectl", "restart" ] );
 		proc.on('close', function( code ){
 			if ( code == 0 ){
 				d.resolve();
-				grunt.log.writeln(" complete");
+				grunt.log.writeln("apache restarted.");
 			}
 			else{
 				grunt.log.writeln("");

@@ -59,8 +59,8 @@ module.exports = function HostsController( grunt, options ){
 					if (hosts[domain] == undefined){
 						hosts[domain] = {};
 					}
-					hosts[ domain ].ip4 = opts.ip4;
-					hosts[ domain ].ip6 = opts.ip6;
+					hosts[ domain ].ip4 = opts.ipv4;
+					hosts[ domain ].ip6 = opts.ipv6;
 				} ).
 				then( saveHosts ).
 				then( d.resolve ).
@@ -191,7 +191,8 @@ module.exports = function HostsController( grunt, options ){
 		var domains = Object.keys( hosts );
 		//add domains to managed parts
 		domains.forEach( function( domain ){
-			if ( hosts.hasOwnProperty( domain ) && hosts[ domain ] != undefined ){
+			if ( hosts[ domain ] ){
+				//console.log( domain );
 				var ips = hosts[ domain ];
 				if ( ips.ip4 )
 					managed.push( ips.ip4 + "\t" + domain );
@@ -205,7 +206,7 @@ module.exports = function HostsController( grunt, options ){
 		//join parts
 		var lines = [];
 		lines = lines.concat( unmanaged.top, managed, unmanaged.bottom );
-
+		//grunt.log.writeln( lines.join("\n") );
 		return lines.join("\n");
 
 	}
@@ -223,6 +224,7 @@ module.exports = function HostsController( grunt, options ){
 		var diverged = confHosts != etcHosts;
 
 		//save conf hosts
+		//grunt.log.writeln( JSON.stringify(hosts,undefined,"\t") );
 		grunt.file.write( confPath, stringifyHostsFile() );
 
 		//continue if files have not diverged or changes ignored
@@ -254,6 +256,9 @@ module.exports = function HostsController( grunt, options ){
 	this.addEntry = addEntry;
 	this.removeEntry = removeEntry;
 
+
+	//get current hosts
+	parseHosts();
 
 	return this;
 

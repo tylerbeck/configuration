@@ -7,6 +7,8 @@
 /**
  * Projects Controller
  * @param grunt
+ * @param host
+ * @param servers
  * @param options
  * @returns {module}
  * @constructor
@@ -51,6 +53,7 @@ module.exports = function ProjectsController( grunt, options ){
 		( options.promptIfMissing( qlist ) )().
 				then( setupProject ).
 				then( getProjectSettings ).
+				then( setupVhost ).
 				then( d.resolve ).
 				catch( d.reject );
 
@@ -152,7 +155,6 @@ module.exports = function ProjectsController( grunt, options ){
 
 		( options.promptIfMissing( qlist ) )().
 				then( function(){
-					console.log('prompts complete');
 					var d = q.defer();
 
 					var dir = options.get('projectPath');
@@ -307,6 +309,23 @@ module.exports = function ProjectsController( grunt, options ){
 			//TODO:look for common webroot directories
 		}
 
+	}
+
+	/**
+	 * prompts user whether or not to setup a vhost,
+	 * value is used later
+	 * @returns {*}
+	 */
+	function setupVhost(){
+		var d = q.defer();
+
+		var qlist = "projectAddVhost projectServerType projectWebRoot";
+
+		( options.promptIfMissing( qlist ) )().
+				then( d.resolve ).
+				catch( d.reject );
+
+		return d.promise;
 	}
 
 

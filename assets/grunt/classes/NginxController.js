@@ -46,27 +46,34 @@ module.exports = function NginxController( grunt, options ){
 
 		var d = q.defer();
 
-		var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths rootPath";
+		var serverType = options.get('serverType');
 
-		( options.promptIfMissing( qlist ) )().
-				then( function(){
-					var domain = options.get('domain').trim();
-					var tpl = grunt.file.read( confTplPath );
-					var conf = _.template( tpl, options.getAll() ).replace(/[\n\r]+\s*[\n\r]+/g,"\n");
+		if ( serverType == undefined || serverType == 'nginx' ) {
+			var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths rootPath";
 
-					//write file
-					grunt.log.writeln( "adding nginx vhost: "+domain );
-					grunt.file.write( sitesAvblPath+domain, conf );
-				} ).
-				then( d.resolve ).
-				catch( d.reject );
+			( options.promptIfMissing( qlist ) )().
+					then( function() {
+						var domain = options.get( 'domain' ).trim();
+						var tpl = grunt.file.read( confTplPath );
+						var conf = _.template( tpl, options.getAll() ).replace( /[\n\r]+\s*[\n\r]+/g, "\n" );
+
+						//write file
+						grunt.log.writeln( "adding nginx vhost: " + domain );
+						grunt.file.write( sitesAvblPath + domain, conf );
+					} ).
+					then( d.resolve ).
+					catch( d.reject );
+		}
+		else{
+			d.resolve();
+		}
 
 		return d.promise;
 
 	}
 
 	/**
-	 * adds vhost to sites-available
+	 * removes vhost from sites-available
 	 */
 	function removeVhost(){
 
@@ -106,17 +113,21 @@ module.exports = function NginxController( grunt, options ){
 				then( function(){
 					var domain = options.get('domain').trim();
 
-					grunt.log.writeln( "enabling nginx vhost: "+domain );
-
 					var confSrc  = sitesAvblPath+domain;
 					var confDest = sitesEnblPath+domain;
 
-					if ( grunt.file.exists( confSrc ) ){
-						fs.symlinkSync( confSrc, confDest );
+					if ( grunt.file.exists( confSrc ) && !grunt.file.exists( confDest ) ){
+						if (grunt.file.exists( confDest )){
+							grunt.log.writeln( "nginx vhost already enabled for: "+domain );
+						}
+						else{
+							grunt.log.writeln( "enabling nginx vhost: "+domain );
+							fs.symlinkSync( confSrc, confDest );
+						}
 					}
-					else{
-						grunt.log.error('nginx vhost: '+domain+' not found');
-					}
+					//else{
+					//	grunt.log.error('nginx vhost: '+domain+' not found');
+					//}
 
 				} ).
 				then( d.resolve ).
@@ -139,11 +150,10 @@ module.exports = function NginxController( grunt, options ){
 				then( function(){
 					var domain = options.get('domain').trim();
 
-					grunt.log.writeln( "enabling nginx vhost: "+domain );
-
 					var confDest = sitesEnblPath+domain;
 
 					if ( grunt.file.exists( confDest ) ){
+						grunt.log.writeln( "enabling nginx vhost: "+domain );
 						grunt.file.delete( confDest );
 					}
 
@@ -164,14 +174,13 @@ module.exports = function NginxController( grunt, options ){
 		var d = q.defer();
 
 		var stop = sudo( [ "nginx", "-s", "stop" ] );
-		grunt.log.write("restarting nginx...");
 		stop.on('close', function( stopCode ){
-			if ( stopCode == 0 ){
+			if ( true || stopCode == 0 ){ //stop failing indicates server is not running
 				var start = sudo( [ "nginx" ] );
 				start.on('close', function( startCode ) {
 					if ( startCode == 0 ) {
 						d.resolve();
-						grunt.log.writeln(" complete");
+						grunt.log.writeln("nginx restarted.");
 					}
 					else{
 						grunt.log.writeln("");

@@ -25,7 +25,12 @@ module.exports = function( grunt ){
 	var apache = new (require('../classes/ApacheController'))( grunt, options );
 
 	/**
-	 * apache controller
+	 * server controller
+	 */
+	var servers = new (require('../classes/ServerController'))( [nginx,apache], grunt, options );
+
+	/**
+	 * project controller
 	 */
 	var project = new (require('../classes/ProjectController'))( grunt, options );
 
@@ -35,12 +40,13 @@ module.exports = function( grunt ){
 
 
 	/**
-	 * adds vhost files for specified domain
+	 * adds vhost files for specified domain for nginx and apache
 	 * @returns {*}
 	 */
-	function addVhosts(){
+	/*function addVhosts(){
 
 		var d = q.defer();
+
 		var opts = options.getAll();
 
 		nginx.addVhost().
@@ -53,14 +59,14 @@ module.exports = function( grunt ){
 				catch( d.reject );
 
 		return d.promise;
-	}
+	}*/
 
 
 	/**
-	 * adds vhost conf file links to sites-enabled
+	 * adds vhost conf file links to sites-enabled for nginx and apache
 	 * @returns {*}
 	 */
-	function enableVhosts(){
+	/*function enableVhosts(){
 
 		var d = q.defer();
 		var opts = options.getAll();
@@ -75,7 +81,7 @@ module.exports = function( grunt ){
 				catch( d.reject );
 
 		return d.promise;
-	}
+	}*/
 
 
 	/**
@@ -154,8 +160,9 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		addVhosts().
-				then( enableVhosts ).
+		servers.addVhost().
+				then( servers.enableVhost ).
+				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
 
@@ -168,8 +175,8 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		nginx.removeVhost().
-				then( apache.removeVhost ).
+		servers.removeVhost().
+				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
 
@@ -182,7 +189,8 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		enableVhosts().
+		servers.enableVhost().
+				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
 
@@ -195,8 +203,8 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		nginx.disableVhost().
-				then( apache.disableVhost ).
+		servers.disableVhost().
+				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
 
@@ -208,8 +216,7 @@ module.exports = function( grunt ){
 	grunt.registerTask( 'restart-servers', function(){
 
 		var done = this.async();
-		nginx.restart().
-				then( apache.restart ).
+		servers.restart().
 				then( finished( done ) ).
 				catch( problem( done, "an error occurred restarting server") );
 
@@ -223,6 +230,22 @@ module.exports = function( grunt ){
 		var done = this.async();
 
 		project.create().
+				then( function(){
+					var d = q.defer();
+					if ( options.get("projectAddVhost")){
+						hosts.addEntry().
+								then( servers.addVhost ).
+								then( servers.enableVhost ).
+								then( servers.restart ).
+								then( d.resolve ).
+								catch( d.reject );
+					}
+					else{
+						d.resolve();
+					}
+
+					return d.promise;
+				} ).
 				then( finished( done ) ).
 				catch( problem( done ) );
 	});
