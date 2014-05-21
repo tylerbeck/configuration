@@ -18,9 +18,10 @@
 	CONFIGURE_NODEJS=0
 	CONFIGURE_SERVERS=0
 	CONFIGURE_APPS=0
+	CONFIGURE_CUSTOM=0
 	XXXXXX=0
 
-	while getopts ":xfbhgnsa" opt; do
+	while getopts ":xfbhgnsac" opt; do
         case $opt in
             x)
                 LINK_TOOLCHAIN=1
@@ -45,6 +46,9 @@
 		        ;;
             a)
 		        CONFIGURE_APPS=1
+		        ;;
+            c)
+		        CONFIGURE_CUSTOM=1
 		        ;;
             \?)
                 echo "Invalid option: -$OPTARG"
@@ -141,6 +145,15 @@
 		#__log "CONFIGURE_SERVERS" ${L}
 		#link server configuration
 		sh configure-applications.sh
+	fi
+
+#execute custom scripts -------------------------
+	if [ ${CONFIGURE_CUSTOM} = 1 ]; then
+		#__log "CONFIGURE_CUSTOM" ${L}
+		for SCRIPT in "conf/scripts/"*
+		do
+ 			__log "executing custom script: $SCRIPT" ${L}
+		done
 	fi
 
 
