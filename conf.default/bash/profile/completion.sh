@@ -5,3 +5,6 @@
 
 #GIT COMPLETION --------------------------------
 	source ~/.bash/profile/helpers/git-completion.bash
+
+#GRUNT COMPLETION ------------------------------
+	eval "$(grunt --completion=bash)"
