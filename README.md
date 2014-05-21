@@ -11,7 +11,7 @@ cd ~/ && mkdir Projects
 git clone https://github.com/tylerbeck/configuration.git
 ```
 
-4. If you already have a compatible confiugration directory, clone or copy it to `~/Projects/configuration/conf/` otherwise if you want to alter the default brew and node installs do the following:
+4. If you already have a compatible confiugration directory, clone or copy it to `~/Projects/configuration/conf/` otherwise if you want to alter the default brew and node installs or add custom setup scripts do the following:
 	
 	1. Run folder configuration to copy default configuration
 	
@@ -22,6 +22,7 @@ git clone https://github.com/tylerbeck/configuration.git
 	3. Open `conf/brew/packages` and add/remove brew packages to be installed.
 	4. Open `conf/applications/download_links` and add/remove links to download pages for applications to be manually installed.
 	5. Open `conf/node/package_global.json` and add/remove global node modules to be installed.
+	6. Add any custom sh setup scripts to `conf/scripts`
 
 5. Optionally make changes to any configuration files in `conf` (this can also be done at a later time; all original files and directories are coppied to [name].orig)
 	
@@ -35,9 +36,10 @@ git clone https://github.com/tylerbeck/configuration.git
 	* -n: configure nodejs
 	* -s: configure application servers (nginx, apache)
 	* -a: install applications
+	* -c: execute custom sh scripts (located in conf/scripts)
 	
 ```
-sh configure.sh -xfbhgnsa
+sh configure.sh -xfbhgnsac
 ```
 
 
