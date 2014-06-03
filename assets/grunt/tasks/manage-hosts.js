@@ -177,7 +177,8 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		servers.removeVhost().
+		hosts.removeEntry().
+				then( servers.removeVhost ).
 				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
