@@ -160,8 +160,10 @@ module.exports = function( grunt ){
 
 		var done = this.async();
 
-		servers.addVhost().
+		hosts.addEntry().
+				then( servers.addVhost ).
 				then( servers.enableVhost ).
+				then( hosts.addEntry ).
 				then( servers.restart ).
 				then( finished( done ) ).
 				catch( problem( done ) );
