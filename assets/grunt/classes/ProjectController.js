@@ -62,6 +62,10 @@ module.exports = function ProjectsController( grunt, options ){
 	}
 
 
+	//TODO: archiveProject
+
+	//TODO: unarchiveProject
+
 
 	/*================================================
 	 * Private Methods
@@ -190,9 +194,6 @@ module.exports = function ProjectsController( grunt, options ){
 
 	}
 
-
-
-
 	/**
 	 * source project from git repository
 	 * @returns {*}
@@ -288,7 +289,6 @@ module.exports = function ProjectsController( grunt, options ){
 
 	}
 
-
 	/**
 	 * look for webroot path, and add to options if found
 	 * look for server type, and add to options if found
@@ -327,19 +327,6 @@ module.exports = function ProjectsController( grunt, options ){
 
 		return d.promise;
 	}
-
-
-/*
-
- var qlist1 = "projectPath projectIsNew projectCloneRepo projectScaffoldingType projectScaffoldPath "+
- "projectScaffoldGenerator projectRepo";
-
- var qlist2 = "projectServerType projectRootPath domain ipv4 ipv6 staticPaths denyDotAccess "+
- "proxyPHP proxyPort apacheOptions apacheOrder apacheAllow apacheDeny apacheOverride";
-
- */
-
-
 
 
 	/*================================================
