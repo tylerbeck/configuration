@@ -21,8 +21,8 @@ module.exports = function OptionsController( grunt ){
 	var q = require( 'q' );
 	var _ = require( 'lodash' );
 	var inquirer = require( 'inquirer' );
-	var exec = require( 'child_process' ).exec;
 	var path = require( 'path' );
+	var exec = require( 'child_process' ).exec;
 
 	/*================================================
 	 * Public Attributes
@@ -137,7 +137,8 @@ module.exports = function OptionsController( grunt ){
 			when: function( answers ){
 				return matchFn( 'serverType', 'apache', answers );
 			},
-			default: "FollowSymLinks Indexes"
+			default: "FollowSymLinks Indexes",
+			first: getApacheVersion
 		},
 		apacheOrder: {
 			name: "apacheOrder",
@@ -148,7 +149,7 @@ module.exports = function OptionsController( grunt ){
 				"deny,allow"
 			],
 			when: function( answers ){
-				return matchFn( 'serverType', 'apache', answers );
+				return matchFn( 'serverType', 'apache', answers ) && checkApacheVersion("2.4.0","<");
 			},
 			default: "allow,deny"
 		},
@@ -157,7 +158,7 @@ module.exports = function OptionsController( grunt ){
 			message: "apache allow (space separated)",
 			type: 'input',
 			when: function( answers ){
-				return matchFn( 'serverType', 'apache', answers );
+				return matchFn( 'serverType', 'apache', answers ) && checkApacheVersion("2.4.0","<");
 			},
 			filter: spacedArrayFilter,
 			default: "all"
@@ -167,10 +168,19 @@ module.exports = function OptionsController( grunt ){
 			message: "apache deny (space separated)",
 			type: 'input',
 			when: function( answers ){
-				return matchFn( 'serverType', 'apache', answers );
+				return matchFn( 'serverType', 'apache', answers ) && checkApacheVersion("2.4.0","<");
 			},
 			filter: spacedArrayFilter,
 			default: "none"
+		},
+		apacheRequire: {
+			name: "apacheRequire",
+			message: "apache require",
+			type: 'input',
+			when: function( answers ){
+				return matchFn( 'serverType', 'apache', answers ) && checkApacheVersion("2.4.0",">");
+			},
+			default: "all granted"
 		},
 		apacheOverride: {
 			name: "apacheOverride",
@@ -472,6 +482,75 @@ module.exports = function OptionsController( grunt ){
 		}
 
 		return d.promise;
+	}
+
+	/**
+	 * gets apache version array
+	 * [major,minor,update]
+	 * @returns {*}
+	 */
+	function getApacheVersion(){
+		var d = q.defer();
+
+		var proc = exec( 'httpd -v', function ( error, stdout, stderr ) {
+			if (error !== null) {
+				console.log('exec error: ' + error);
+				d.reject( error );
+			}
+			else {
+				//Server version: Apache/2.4.9 (Unix)
+				var parts = stdout.match( /Server version\: Apache\/([0-9\.]+)/i );
+				if (parts){
+					var vstr = parts[1];
+					var version = vstr.split('.');
+					version = version.map( function( item ){
+						return parseInt( item );
+					});
+					//console.log( version.join('-'));
+					options.apacheVersion = version;
+					d.resolve( version );
+				}
+				else{
+					d.reject( "could not find apache version");
+				}
+			}
+		});
+
+		return d.promise;
+	}
+
+	/**
+	 * compares apache version array
+	 * [major,minor,update]
+	 * @param vstr 0.0.0
+	 * @param operator '==','<','>'
+	 * @returns {boolean}
+	 */
+	function checkApacheVersion( vstr, operator ){
+		var v = vstr.split('.');
+		v = v.map( function( item ){
+			return parseInt( item );
+		});
+		var av = options.apacheVersion;
+
+		var check = false;
+		switch (operator){
+			case '==':
+				check = v[0] == av[0] && v[1] == av[1] && v[2] == av[2];
+				break;
+			case '>':
+				if (av[0] > v[0]) check = true;
+				if (av[0] == v[0] && av[1] > v[1]) check = true;
+				if (av[0] == v[0] && av[1] == v[1] && av[2] > v[2]) check = true;
+				break;
+			case '<':
+				if (av[0] < v[0]) check = true;
+				if (av[0] == v[0] && av[1] < v[1]) check = true;
+				if (av[0] == v[0] && av[1] == v[1] && av[2] < v[2]) check = true;
+				break;
+		}
+
+		return check;
 	}
 
 

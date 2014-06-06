@@ -52,7 +52,7 @@ module.exports = function ApacheController( grunt, options ){
 		if ( serverType == undefined || serverType == 'apache' ){
 
 			var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths "+
-					"rootPath apacheOptions apacheOrder apacheAllow apacheDeny apacheOverride";
+					"rootPath apacheOptions apacheOrder apacheAllow apacheDeny apacheRequire apacheOverride";
 
 			( options.promptIfMissing( qlist ) )().
 					then( function(){
