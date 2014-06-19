@@ -118,7 +118,7 @@ module.exports = function OptionsController( grunt ){
 			message: "webroot path",
 			type: 'input',
 			//TODO: validate root directory path
-			validate: validatePattern( true, /.*/, 'enter a valid path'),
+			validate: validatePattern( true, /.*/, 'enter a valid path')
 		},
 		projectRootPath: {
 			name: "rootPath",
@@ -128,6 +128,9 @@ module.exports = function OptionsController( grunt ){
 			validate: validatePattern( true, /.*/, 'enter a valid path'),
 			filter: function( value ){
 				return path.join( options['projectPath'], value );
+			},
+			when: function( answers ){
+				return matchFn( 'serverType', 'node', answers, true ) && matchFn( 'serverType', 'none', answers, true );
 			}
 		},
 		apacheOptions: {
@@ -223,7 +226,9 @@ module.exports = function OptionsController( grunt ){
 			type: 'input',
 			validate: validatePattern( true, /.*/, 'enter a valid path'),
 			when: function( answers ){
-				return matchFn( 'projectAddVhost', true, answers ) && matchFn( 'serverType', 'none', answers, true );
+				return matchFn( 'projectAddVhost', true, answers )
+						&& matchFn( 'serverType', 'node', answers, true )
+						&& matchFn( 'serverType', 'none', answers, true );
 			},
 			filter: function( value ){
 				setOption( 'rootPath', path.join( options['projectPath'], value ) );

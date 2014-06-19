@@ -47,10 +47,28 @@ module.exports = function NginxController( grunt, options ){
 		var d = q.defer();
 
 		var serverType = options.get('serverType');
+		var qlist = "";
 
-		if ( serverType == undefined || serverType == 'nginx' ) {
-			var qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths rootPath";
+		switch ( serverType ){
 
+			case 'node':
+				qlist = "domain proxyPort denyDotAccess staticPaths";
+				break;
+
+			case 'php':
+				break;
+
+			case 'none':
+				break;
+
+			case 'nginx':
+			case undefined:
+				qlist = "domain serverType proxyPHP proxyPort denyDotAccess staticPaths rootPath";
+				break;
+
+		}
+
+		if ( qlist != "" ){
 			( options.promptIfMissing( qlist ) )().
 					then( function() {
 						var domain = options.get( 'domain' ).trim();
