@@ -31,7 +31,9 @@ module.exports = function OptionsController( grunt ){
 	 * options object
 	 * @type {{}}
 	 */
-	var options = {};
+	var options = {
+		apacheRequire: false
+	};
 
 	/*================================================
 	 * Private Attributes
