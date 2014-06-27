@@ -78,7 +78,7 @@
 
 		if [ ! -e conf ]; then
 			__log "conf directory not found, copying conf.default to conf" ${L}
-			cp conf.default conf
+			cp -r conf.default conf
 		fi
 
 		if [ ! -e ~/Projects ]; then
