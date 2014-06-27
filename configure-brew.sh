@@ -56,7 +56,7 @@
 
 		__log_header "Homebrew Installation" ${L}
 
-		__run "ruby -e \"$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)\"" ${L}
+		ruby -e "$(curl -fsSL https://raw.github.com/Homebrew/homebrew/go/install)"
 
 		__log_complete ${L}
 
