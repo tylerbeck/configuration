@@ -52,7 +52,7 @@ module.exports = function NginxController( grunt, options ){
 		switch ( serverType ){
 
 			case 'node':
-				qlist = "domain proxyPort denyDotAccess staticPaths";
+				qlist = "domain proxyPort denyDotAccess staticPaths rootPath";
 				break;
 
 			case 'php':
