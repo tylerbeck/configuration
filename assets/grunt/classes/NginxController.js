@@ -184,31 +184,26 @@ module.exports = function NginxController( grunt, options ){
 	}
 
 	/**
-	 * restarts nginx
+	 * executes control command
 	 * @returns {*}
 	 */
-	function restart(){
+	function ctrlcmd( args ){
+
+		args = args || [];
+		args = [ "nginx" ].concat( args );
+		grunt.verbose.writeln( "executing: ", args.join(" ") );
 
 		var d = q.defer();
 
-		var stop = sudo( [ "nginx", "-s", "stop" ] );
-		stop.on('close', function( stopCode ){
-			if ( true || stopCode == 0 ){ //stop failing indicates server is not running
-				var start = sudo( [ "nginx" ] );
-				start.on('close', function( startCode ) {
-					if ( startCode == 0 ) {
-						d.resolve();
-						grunt.log.writeln("nginx restarted.");
-					}
-					else{
-						grunt.log.writeln("");
-						d.reject( 'start process exited with code ' + startCode )
-					}
-				});
+		var proc = sudo( args );
+		proc.on('close', function( code ){
+			if ( code == 0 ){
+				grunt.log.writeln( args.join(" ") + " : complete");
+				d.resolve();
 			}
 			else{
 				grunt.log.writeln("");
-				d.reject( 'stop process exited with code ' + stopCode )
+				d.reject( args.join(" ") + ' process exited with code ' + code )
 			}
 		});
 
@@ -216,6 +211,19 @@ module.exports = function NginxController( grunt, options ){
 
 	}
 
+	function start(){
+		return ctrlcmd();
+	}
+
+	function stop(){
+		return ctrlcmd(['-s','stop']);
+	}
+
+	function restart(){
+		var d = q.defer();
+		stop().then( start ).then( d.resolve );
+		return d.promise;
+	}
 
 	/*================================================
 	 * Private Methods
@@ -230,6 +238,8 @@ module.exports = function NginxController( grunt, options ){
 	this.enableVhost = enableVhost;
 	this.disableVhost = disableVhost;
 	this.restart = restart;
+	this.start = start;
+	this.stop = stop;
 
 
 	return this;

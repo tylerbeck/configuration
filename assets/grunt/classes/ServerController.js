@@ -34,13 +34,30 @@ module.exports = function ServerController( servers, grunt, options ){
 
 	function executeMethods( name ){
 
-		var fns = [];
+		var d = q.defer();
+		var promises = [];
 		servers.forEach( function( s ){
 			if ( s[ name ] && typeof s[ name ] == 'function')
-				fns.push( s[ name ] );
+				promises.push( s[ name ]() );
 		});
 
-		return fns.reduce( q.when, q() );
+		q.allSettled( promises )
+			.then( function ( results ) {
+					var errors = [];
+					results.forEach(function ( result, index ) {
+						if (result.state !== "fulfilled") {
+							errors.push( result.state );
+						}
+					} );
+					if ( errors.length > 0 ){
+						d.reject( errors.join("\n") );
+					}
+					else {
+						d.resolve();
+					}
+				});
+
+		return d.promise;
 	}
 
 
@@ -73,11 +90,28 @@ module.exports = function ServerController( servers, grunt, options ){
 	}
 
 	/**
-	 * restarts nginx
+	 * restart servers
 	 * @returns {*}
 	 */
 	function restart(){
 		return executeMethods( 'restart' );
+	}
+
+	/**
+	 * start servers
+	 * @returns {*}
+	 */
+	function start(){
+		return executeMethods( 'start' );
+	}
+
+
+	/**
+	 * stop servers
+	 * @returns {*}
+	 */
+	function stop(){
+		return executeMethods( 'stop' );
 	}
 
 
@@ -94,6 +128,8 @@ module.exports = function ServerController( servers, grunt, options ){
 	this.enableVhost = enableVhost;
 	this.disableVhost = disableVhost;
 	this.restart = restart;
+	this.start = start;
+	this.stop = stop;
 
 
 	return this;

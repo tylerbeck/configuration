@@ -221,7 +221,31 @@ module.exports = function( grunt ){
 		var done = this.async();
 		servers.restart().
 				then( finished( done ) ).
-				catch( problem( done, "an error occurred restarting server") );
+				catch( problem( done, "an error occurred restarting servers") );
+
+	});
+
+	/**
+	 * restarts apache and nginx
+	 */
+	grunt.registerTask( 'start-servers', function(){
+
+		var done = this.async();
+		servers.start().
+				then( finished( done ) ).
+				catch( problem( done, "an error occurred starting servers") );
+
+	});
+
+	/**
+	 * restarts apache and nginx
+	 */
+	grunt.registerTask( 'stop-servers', function(){
+
+		var done = this.async();
+		servers.stop().
+				then( finished( done ) ).
+				catch( problem( done, "an error occurred stopping servers") );
 
 	});
 

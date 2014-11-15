@@ -168,26 +168,40 @@ module.exports = function ApacheController( grunt, options ){
 	}
 
 	/**
-	 * restarts nginx
+	 * executes control command
 	 * @returns {*}
 	 */
-	function restart(){
-
+	function ctrlcmd( args ){
+		args = args || [];
+		args = [ "apachectl" ].concat( args );
+		grunt.verbose.writeln( "executing: ", args.join(" ") );
 		var d = q.defer();
-		var proc = sudo( [ "apachectl", "restart" ] );
+		var proc = sudo( args );
 		proc.on('close', function( code ){
 			if ( code == 0 ){
+				grunt.log.writeln( args.join(" ") + " : complete");
 				d.resolve();
-				grunt.log.writeln("apache restarted.");
 			}
 			else{
 				grunt.log.writeln("");
-				d.reject( 'restart process exited with code ' + code )
+				d.reject( args.join(" ") + ' process exited with code ' + code )
 			}
 		});
 
 		return d.promise;
 
+	}
+
+	function restart(){
+		return ctrlcmd(['restart']);
+	}
+
+	function start(){
+		return ctrlcmd(['start']);
+	}
+
+	function stop(){
+		return ctrlcmd(['stop']);
 	}
 
 
@@ -204,6 +218,8 @@ module.exports = function ApacheController( grunt, options ){
 	this.enableVhost = enableVhost;
 	this.disableVhost = disableVhost;
 	this.restart = restart;
+	this.start = start;
+	this.stop = stop;
 
 
 	return this;
